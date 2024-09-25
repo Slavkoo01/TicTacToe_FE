@@ -1,26 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainMenu from './components/MainMenu';
-import GameBoard from './components/GameBoard';
-import Login from './components/Login';
+import Login from './components/Login/Login';
+import Game from './components/Game/Game';
+import Registration from "./components/Registration/Registration";
 
 const App: React.FC = () => {
-
-    const [board, setBoard] = useState<(string | null)[]>(Array(9).fill(null));
-
-    const handleCellClick = (index: number) => {
-     
-      const newBoard = [...board];
-      newBoard[index] = 'X'; 
-      setBoard(newBoard);
-    };
     return (
     <Router>
       <div className="app">
         <Routes>
           <Route path="/" element={<MainMenu />} />
-          <Route path="/singleplayer" element={<GameBoard board={board} onCellClick={handleCellClick} />} />
+          <Route path="/singleplayer" element={<Game />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Registration />} />
         </Routes>
       </div>
     </Router>

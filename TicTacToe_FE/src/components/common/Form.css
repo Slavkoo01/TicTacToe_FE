@@ -1,0 +1,15 @@
+.button-container {
+  text-align: center; /* Center text within the container */
+}
+
+.loginBtn {
+  display: inline-block; /* Makes the button inline */
+  margin-top: 20px;
+  width: 100px; /* Optional: add some space above the button */
+}
+
+.formLabel {
+  color: var(--lbColor);
+  font-size: 25px;
+  font-weight: medium;
+}

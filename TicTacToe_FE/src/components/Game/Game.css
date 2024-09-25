@@ -1,0 +1,44 @@
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  gap: 10px;
+  background-color: rgb(17, 16, 16);
+  user-select: none;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  background-color: var(--BgColor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  user-select: none;
+}
+
+.cell:hover {
+  background-color: var(--BgColorHighlight);
+  border: 5px solid var(--BgColor);
+}
+
+.status {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+body,
+html {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button:hover {
+  background-color: var(--BgColor);
+}
