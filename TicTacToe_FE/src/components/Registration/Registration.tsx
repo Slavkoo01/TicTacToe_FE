@@ -1,8 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserForm from "../common/Form";
-
+import client from '../../utils/apolloClient';
+import { useMutation, gql } from "@apollo/client";
 import './Registration.css';
+
+
+const REGISTRATION_MUTATION = gql`
+    mutation register($username: String!, $email: String!, $password: String!){
+        registerUser(username: $username, email: $email, password: $password){
+            token
+        }
+    }
+`;
 
 const Registration: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -10,8 +20,8 @@ const Registration: React.FC = () => {
     password: "",
     email: "",
   });
-
-  const [error, setError] = useState<{
+  const [register, { data, error, loading }] = useMutation(REGISTRATION_MUTATION, { client });
+  const [validateError, setvalidateError] = useState<{
     username: string | null;
     password: string | null;
     email: string | null;
@@ -34,44 +44,56 @@ const Registration: React.FC = () => {
 
   // Validation logic
   const validate = () => {
-    const errors: { username: string | null; password: string | null; email: string | null } = {
+    const validateErrors: { username: string | null; password: string | null; email: string | null } = {
       username: null,
       password: null,
       email: null,
     };
 
-    if (!formData.username) errors.username = "Username is required.";
+    if (!formData.username) validateErrors.username = "Username is required.";
     const usernameRegex = /^[a-zA-Z0-9]+$/;
-
-    if (!usernameRegex.test(formData.username) && !errors.username) {
-      errors.username = "Username can only contain alphanumeric characters.";
+    if (!usernameRegex.test(formData.username) && !validateErrors.username) {
+      validateErrors.username = "Username can only contain alphanumeric characters.";
     }
-
-    if (!formData.password) errors.password = "Password is required.";
-    if (formData.password.length < 6 && !errors.password) {
-      errors.password = "Password must be at least 6 characters long.";
+    
+    if (!formData.password) validateErrors.password = "Password is required.";
+    if (formData.password.length < 6 && !validateErrors.password) {
+        validateErrors.password = "Password must be at least 6 characters long.";
     }
-
-    if (!formData.email) {
-      errors.email = "Email is required.";
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        errors.email = "Invalid email format.";
-      }
+    
+    if (!formData.email) validateErrors.email = "Email is required.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email) && !validateErrors.email) {
+      validateErrors.email = "Invalid email format.";
     }
+    
 
-    return errors;
+    return validateErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validationErrors = validate();
-    setError(validationErrors);
+    setvalidateError(validationErrors);
 
     if (!validationErrors.username && !validationErrors.password && !validationErrors.email) {
-      alert("Registration successful!");
-      navigate("/login");
+      
+        try {
+            const response = await register({
+                variables: {
+                    username: formData.username,
+                    password: formData.password,
+                    email: formData.email,
+                },
+            });
+            const token = response.data?.registerUser?.token;
+            if(token){
+                localStorage.setItem('JWT', token);
+                console.log('Register successful, JWT:', token);
+            }
+        } catch (err) {
+            console.error('Error during registration:', err);
+        }
     }
   };
 
@@ -80,21 +102,21 @@ const Registration: React.FC = () => {
       name: "username",
       label: "Username",
       value: formData.username,
-      error: error.username,
+      error: validateError.username,
     },
     {
       name: "password",
       label: "Password",
       value: formData.password,
       type: "password",
-      error: error.password,
+      error: validateError.password,
     },
     {
       name: "email",
       label: "Email",
       value: formData.email,
       type: "email",
-      error: error.email,
+      error: validateError.email,
     },
   ];
 
@@ -114,6 +136,11 @@ const Registration: React.FC = () => {
             Login here
           </a>
         </p>
+      </div>
+      <div className="login-link">
+        {loading && (<div className="spinner-border" role="status"/>)}
+        {error && (<div className="invalid-feedback d-block text-center">Error: {error.message}</div>)}
+        {data && navigate("/", { replace: true })}
       </div>
     </div>
   );

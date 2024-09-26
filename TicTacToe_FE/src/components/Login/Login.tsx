@@ -1,16 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserForm from "../common/Form"; 
+import client from '../../utils/apolloClient';
+import { useMutation, gql } from "@apollo/client";
 import './Login.css'
+
+const LOGIN_MUTATION = gql`
+  mutation login($username: String!, $password: String!) {
+    loginUser(username: $username, password: $password) {
+      token
+    }
+  }
+`;
+
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: ""
   });
-
+  const [login, { data, error, loading }] = useMutation(LOGIN_MUTATION, { client });
   
-  const [error, setError] = useState<{
+  const [validationError, setvalidationError] = useState<{
     username: string | null;
     password: string | null;
   }>({
@@ -31,37 +42,52 @@ const Login: React.FC = () => {
 
   // Validation logic
   const validate = () => {
-    const errors: { username: string | null; password: string | null } = {
+    const validationErrors: { username: string | null; password: string | null } = {
       username: null,
       password: null
     };
-
-    if (!formData.username) errors.username = "Username is required.";
+    const username = formData.username.trim()
+    console.log(username);
+    if (!username) validationErrors.username = "Username is required.";
     const usernameRegex = /^[a-zA-Z0-9]+$/;
 
-    if (!usernameRegex.test(formData.username) && !errors.username) {
-        errors.username = "Username can only contain alphanumeric characters.";
+    if (!usernameRegex.test(username) && !validationErrors.username) {
+        validationErrors.username = "Username can only contain alphanumeric characters.";
     }
 
-    if (!formData.password) errors.password = "Password is required.";
+    if (!formData.password) validationErrors.password = "Password is required.";
 
-    if (formData.password.length < 6 && !errors.password) {
-        errors.password = "Password must be at least 6 characters long.";
+    if (formData.password.length < 6 && !validationErrors.password) {
+        validationErrors.password = "Password must be at least 6 characters long.";
     }
 
-    return errors;
+    return validationErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    setError(validationErrors);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  const validationErrors = validate();
+  setvalidationError(validationErrors);
 
-    if (!validationErrors.username && !validationErrors.password) {
-      alert("Login successful!");
-      navigate("/");
+  if (!validationErrors.username && !validationErrors.password) {
+    try {
+      const response = await login({
+        variables: {
+          username: formData.username,
+          password: formData.password,
+        },
+      });
+      const token = response.data?.loginUser?.token;
+      if (token) {
+        localStorage.setItem('JWT', token);
+        console.log('Login successful, JWT:', token);
+      }
+    } catch (err) {
+      console.error('Error during login:', err);
     }
-  };
+  }
+};
+
 
  
   const fields = [
@@ -69,14 +95,14 @@ const Login: React.FC = () => {
       name: "username",
       label: "Username",
       value: formData.username,
-      error: error.username
+      error: validationError.username
     },
     {
       name: "password",
       label: "Password",
       value: formData.password,
       type: "password",
-      error: error.password
+      error: validationError.password
     }
   ];
 
@@ -96,6 +122,11 @@ const Login: React.FC = () => {
           <a href="/register" onClick={() => navigate("/register")}>
             Register here
           </a>
+      </div>
+      <div className="registration-link">
+        {loading && (<div className="spinner-border" role="status"/>)}
+        {error && (<div className="invalid-feedback d-block text-center">Error: {error.message}</div>)}
+        {data && navigate("/dashboard", { replace: true })}
       </div>
     </div>
   );
