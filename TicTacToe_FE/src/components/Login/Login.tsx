@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import UserForm from "../common/Form"; 
 import client from '../../utils/apolloClient';
 import { useMutation, gql } from "@apollo/client";
+import mapErrorMessage from './../../utils/errorMap';
 import './Login.css'
 
 const LOGIN_MUTATION = gql`
@@ -125,7 +126,7 @@ const Login: React.FC = () => {
       </div>
       <div className="registration-link">
         {loading && (<div className="spinner-border" role="status"/>)}
-        {error && (<div className="invalid-feedback d-block text-center">Error: {error.message}</div>)}
+        {error && (<div className="invalid-feedback d-block text-center">{mapErrorMessage(error.message)}</div>)}
         {data && navigate("/dashboard", { replace: true })}
       </div>
     </div>
