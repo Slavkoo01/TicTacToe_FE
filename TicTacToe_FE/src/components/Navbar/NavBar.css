@@ -1,0 +1,10 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #805b5b;
+  z-index: 1000;
+  width: 100%;
+  box-shadow: 0px 2px 10px #86b0d411;
+}
