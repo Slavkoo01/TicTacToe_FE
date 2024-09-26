@@ -1,0 +1,11 @@
+.login-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  color: var(--lbColor);
+}
+.login-link p {
+  margin: 0;
+  margin-right: 10px;
+}

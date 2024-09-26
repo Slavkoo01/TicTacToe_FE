@@ -1,0 +1,14 @@
+.inputContainer {
+  position: relative;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+.invalid-feedback {
+  display: block;
+  height: 10px;
+  font-size: 12px;
+}
+.inputLabel {
+  margin-bottom: 5px;
+  color: var(--lbColor);
+}
