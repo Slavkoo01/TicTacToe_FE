@@ -1,9 +1,28 @@
+.contaier {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 60px;
+}
 .game-board {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   gap: 10px;
   background-color: rgb(17, 16, 16);
   user-select: none;
+  justify-content: center;
+}
+
+.cell:hover {
+  background-color: var(--BgColorHighlight);
+  border: 5px solid var(--BgColor);
+}
+
+.status {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff;
 }
 
 .cell {
@@ -18,25 +37,6 @@
   border: none;
   color: white;
   user-select: none;
-}
-
-.cell:hover {
-  background-color: var(--BgColorHighlight);
-  border: 5px solid var(--BgColor);
-}
-
-.status {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-body,
-html {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 button:hover {

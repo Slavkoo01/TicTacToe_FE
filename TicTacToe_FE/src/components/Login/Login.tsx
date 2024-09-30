@@ -66,28 +66,30 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const validationErrors = validate();
-  setvalidationError(validationErrors);
-
-  if (!validationErrors.username && !validationErrors.password) {
-    try {
-      const response = await login({
-        variables: {
-          username: formData.username,
-          password: formData.password,
-        },
-      });
-      const token = response.data?.loginUser?.token;
-      if (token) {
-        localStorage.setItem('JWT', token);
-        console.log('Login successful, JWT:', token);
+    e.preventDefault();
+    const validationErrors = validate();
+    setvalidationError(validationErrors);
+  
+    if (!validationErrors.username && !validationErrors.password) {
+      try {
+        const response = await login({
+          variables: {
+            username: formData.username,
+            password: formData.password,
+          },
+        });
+        const token = response.data?.loginUser?.token;
+        if (token) {
+          localStorage.setItem('JWT', token);
+          console.log('Login successful, JWT:', token);
+          window.location.href = '/';
+        }
+      } catch (err) {
+        console.error('Error during login:', err);
       }
-    } catch (err) {
-      console.error('Error during login:', err);
     }
-  }
-};
+  };
+  
 
 
  

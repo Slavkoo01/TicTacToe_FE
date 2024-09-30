@@ -27,22 +27,24 @@ const UserForm: React.FC<UserFormProps> = ({
 }) => {
   return (
     <form onSubmit={onSubmit}>
-      <div className="button-container">
-        <label className="formLabel">{formLabelText}</label>
-      </div>
-      {fields.map((field) => (
-        <Input
-          key={field.name}
-          name={field.name}
-          label={field.label}
-          value={field.value}
-          type={field.type || "text"}
-          onChange={onChange}
-          error={field.error}
-        />
-      ))}
-      <div className="button-container">
-        <button className="loginBtn btn btn-primary">{buttonText}</button>
+      <div className="form-container">
+        <div className="label-container">
+          <label className="formLabel">{formLabelText}</label>
+        </div>
+        {fields.map((field) => (
+          <Input
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            value={field.value}
+            type={field.type || "text"}
+            onChange={onChange}
+            error={field.error}
+          />
+        ))}
+        <div className="button-container">
+          <button className="loginBtn btn btn-primary">{buttonText}</button>
+        </div>
       </div>
     </form>
   );

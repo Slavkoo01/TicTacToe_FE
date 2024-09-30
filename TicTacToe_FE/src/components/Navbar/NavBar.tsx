@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-
 import './NavBar.css';
+import  TicTacToeIcon  from '../Assets/tic-tac-toe';
 
 interface NavbarProps {
   isLoggedIn: boolean; 
@@ -11,46 +10,46 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, username, onLogout }) => {
-
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   
-    const handleHomeClick = () => {
-      navigate('/');
-    };
-
+  const handleHomeClick = () => {
+    navigate('/');
+  };
   
+  const handleLoginClick = () => {
+    navigate('/login'); 
+  };
+  const handleUsernameClick = () => {
+    navigate('/history');
+  };
 
   return (
-    <nav id="navbar" className="navbar">
-      <div className="container-fluid">
-       
-        <button className="btn" onClick={handleHomeClick}>
-          Home
-        </button>
-
-        
-        <div className="mx-auto text-center">
-          <h3>TIC TAC TOE</h3>
-        </div>
-
-        
-        <div className="d-flex align-items-center">
-          {isLoggedIn ? (
-            <>
-              <span className="me-3">{username}</span>
-              <button className="btn btn-danger" onClick={onLogout}>
-                Logout
+    <div>
+      <nav className="navbar">
+        <div className="container-fluid">
+          <div className="container-fluid1 d-flex align-items-center " onClick={handleHomeClick}> 
+            <TicTacToeIcon />
+            <h3 className="ms-2">Tic-Tac-Toe</h3> 
+          </div>
+          <div className="username-logout">
+            {isLoggedIn ? (
+              <>
+                <span className="me-3 usernameSpan" onClick={handleUsernameClick}>{username}</span>
+                <button className="btn btn-danger" onClick={onLogout}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <button className="btn btn-primary" onClick={handleLoginClick}>
+                Login
               </button>
-            </>
-          ) : (
-            <button className="btn btn-primary" onClick={() => console.log('Navigating to Login...')}>
-              Login
-            </button>
-          )}
+            )}
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
+  
 };
 
 export default Navbar;

@@ -12,7 +12,7 @@ const Board: React.FC<BoardProps> = ({ squares, onSquareClick, xIsNext, winner }
   const status = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? 'X' : 'O'}`;
 
   return (
-      <div>
+      <div className='contaier'>
         <div className="status">{status}</div>
         <div className="game-board">
           <Square value={squares[0]} onSquareClick={() => onSquareClick(0)} />

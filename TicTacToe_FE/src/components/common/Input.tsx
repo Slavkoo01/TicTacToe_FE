@@ -14,13 +14,16 @@ const Input: React.FC<InputProps> = ({ name, label, value, onChange, type = 'tex
   return (
     <div className="inputContainer form-group">
       <label className="inputLabel" htmlFor={name}>{label}</label>
-      <input
-        id={name}
-        type={type}
-        className={inputClass} 
-        value={value}
-        onChange={onChange}
-      />
+      
+        <input
+          id={name}
+          width={'300px'}
+          type={type}
+          className={inputClass}
+          value={value}
+          onChange={onChange}
+        />
+      
       <div className="invalid-feedback"> <label>{error || ''}</label> </div>
     </div>
   );
