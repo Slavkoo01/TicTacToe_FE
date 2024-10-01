@@ -25,12 +25,7 @@ const App: React.FC = () => {
     setIsLoggedIn(false);
     setUsername(undefined);
   }
-  const gameHistory = [
-    { id: 1, player1: 'Alice', player2: 'Bob', result: 'Alice wins', date: '2024-09-30' },
-    { id: 2, player1: 'Charlie', player2: 'David', result: 'Bob wins', date: '2024-09-29' },
-    { id: 3, player1: 'Eve', player2: 'Frank', result: 'Draw', date: '2024-09-28' },
-    // Add more game history entries as needed
-  ];
+ 
 
   return (
       <div className="app">
@@ -39,7 +34,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<MainMenu />} />
           <Route path="/singleplayer" element={<Game />} />
-          <Route path="/history" element={<History history={gameHistory} />} />
+          <Route path="/history" element={<History/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
         </Routes>
