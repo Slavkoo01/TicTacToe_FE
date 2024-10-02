@@ -7,7 +7,10 @@ import Navbar from './components/Navbar/NavBar';
 import History from './components/GameHistoryTable/GameHistoryTable';
 import Registration from "./components/Registration/Registration";
 
+
 const App: React.FC = () => {
+ 
+ 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState<string | undefined>(undefined); 
   
@@ -26,14 +29,14 @@ const App: React.FC = () => {
     setUsername(undefined);
   }
  
-
+  
   return (
       <div className="app">
     <Router>
     <Navbar isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
         <Routes>
           <Route path="/" element={<MainMenu />} />
-          <Route path="/singleplayer" element={<Game />} />
+          <Route path="/game" element={<Game />} />
           <Route path="/history" element={<History/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
