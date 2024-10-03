@@ -9,3 +9,13 @@
 .mainMenuBtn {
   width: 200px;
 }
+.container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.info {
+  color: aliceblue;
+  margin-top: 15px;
+}

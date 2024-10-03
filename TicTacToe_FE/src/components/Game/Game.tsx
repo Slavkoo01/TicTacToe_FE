@@ -1,58 +1,75 @@
 import React, { useState, useEffect } from "react";
 import Board from "./Board";
-import io from "socket.io-client";
-import { useLocation } from "react-router-dom"; 
-
-
-const socket = io('http://localhost:4000');
+import { useLocation, useNavigate } from "react-router-dom"; 
+import './Style/Game.css';
+import socket from '../../utils/socket';
 
 const Game: React.FC = () => {
   const { state } = useLocation(); 
+  const navigate = useNavigate();
   const [squares, setSquares] = useState<(string | null)[]>(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
   const [winner, setWinner] = useState<string | null>(null);
-
   useEffect(() => {
-    if (state?.mode === 'multiplayer') {
-      socket.emit('joinRoom', 'room1');
-    }
-  }, [state?.mode]);
+    socket.emit('joinRoom', { gameId: state.gameId });
+}, [state]);
 
   useEffect(() => {
     socket.on('moveMade', ({ squares, xIsNext }) => {
-      setSquares(squares);
+      setSquares([...squares]);
       setXIsNext(xIsNext);
     });
+  
     socket.on('gameOver', ({ winner, squares }) => {
-      setSquares(squares);
+      setSquares([...squares]);  
       setWinner(winner);
     });
+  
     socket.on('startGame', ({ squares, xIsNext }) => {
-      setSquares(squares);
+      setSquares([...squares]); 
       setXIsNext(xIsNext);
     });
-  }, [socket]);
-
+  
+    socket.on('error', ({ message }) => {
+      alert(message);
+    });
+  
+    return () => {
+      socket.off('moveMade');
+      socket.off('gameOver');
+      socket.off('startGame');
+      socket.off('error');
+    };
+  }, []);
+  
 
   const handleSquareClick = (i: number) => {
     if (squares[i] || winner) return;
-    
+  
+    const newSquares = [...squares]; 
+  
     if (state?.mode === 'multiplayer') {
-      socket.emit('makeMove', { roomId: 'room1', squareIndex: i });
+      socket.emit('makeMove', { roomId: state.gameId, squareIndex: i });
     } else if (state?.mode === 'singleplayer') {
-      squares[i] = 'X';
-      socket.emit('playWithBot', { squares });
+      newSquares[i] = 'X';  
+      socket.emit('playWithBot', { squares: newSquares });
     }
   };
   
+  const handleLeave = () => {   
+      state.gameId = '';
+      navigate('/');     
+  }
   return (
-    <div>
-     
+    <div className="container">
+      <label className="label">Lobby: {state.gameId}</label>
       <Board
         squares={squares}
         onSquareClick={handleSquareClick}
         xIsNext={xIsNext}
-        winner={winner}></Board>
+        winner={winner}
+      />
+      <button className="btn btn-danger btn-lg" onClick={handleLeave}>Leave</button>
     </div>
   );
 };

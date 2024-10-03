@@ -1,5 +1,5 @@
 import React from 'react';
-import './Game.css';
+import './Style/Game.css';
 
 interface SquareProps {
   value: string | null;

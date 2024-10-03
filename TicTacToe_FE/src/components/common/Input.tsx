@@ -1,5 +1,5 @@
 import React from "react";
-import './Input.css';
+import './Style/Input.css';
 interface InputProps {
   name: string;
   label: string;
@@ -7,9 +7,10 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   error?: string | null; 
+  placeholder?: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, label, value, onChange, type = 'text', error }) => {
+const Input: React.FC<InputProps> = ({ name, label, value, onChange, type = 'text', error, placeholder = '' }) => {
   const inputClass = `form-control ${error ? 'is-invalid' : ''}`; 
   return (
     <div className="inputContainer form-group">
@@ -21,6 +22,7 @@ const Input: React.FC<InputProps> = ({ name, label, value, onChange, type = 'tex
           type={type}
           className={inputClass}
           value={value}
+          placeholder={placeholder}
           onChange={onChange}
         />
       

@@ -11,8 +11,6 @@ const root = ReactDOM.createRoot(rootElement);
 
 root.render(
   <ApolloProvider client={client}>
-    
       <App />
-    
   </ApolloProvider>
 );

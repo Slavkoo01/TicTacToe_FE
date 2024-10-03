@@ -1,6 +1,6 @@
 import React from "react";
 import Input from "./Input";
-import "./Form.css";
+import "./Style/Form.css";
 
 interface FieldConfig {
   name: string;

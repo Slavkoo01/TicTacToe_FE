@@ -52,7 +52,6 @@ const Login: React.FC = () => {
       password: null,
     };
     const username = formData.username.trim();
-    console.log(username);
     if (!username) validationErrors.username = "Username is required.";
     const usernameRegex = /^[a-zA-Z0-9]+$/;
 
