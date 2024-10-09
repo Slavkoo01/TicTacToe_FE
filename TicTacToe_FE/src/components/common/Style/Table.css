@@ -1,0 +1,43 @@
+.game_history-table1 {
+  width: 100%;
+  margin: 20px 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.game_history-table h2 {
+  text-align: left;
+  color: #425242;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.table1 {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #333;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table1 thead {
+  background-color: #555;
+  color: #ffffff;
+}
+
+.table1 tbody tr:nth-child(even) {
+  background-color: #444;
+}
+
+.table1 tbody tr:hover {
+  background-color: #555;
+}
+
+.table1 th,
+.table1 td {
+  border-bottom: 1px solid #666;
+  padding: 10px 15px;
+  text-align: left;
+  color: #f1f1f1;
+}

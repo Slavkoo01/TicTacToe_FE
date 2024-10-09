@@ -22,7 +22,10 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, username, onLogout }) => {
   const handleUsernameClick = () => {
     navigate('/history');
   };
-
+  const handleLogOutClick = () => {
+    onLogout();
+    navigate('/', { replace: true });
+  };
   return (
     <div>
       <nav className="navbar">
@@ -35,7 +38,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, username, onLogout }) => {
             {isLoggedIn ? (
               <>
                 <span className="me-3 usernameSpan" onClick={handleUsernameClick}>{username}</span>
-                <button className="btn btn-danger" onClick={onLogout}>
+                <button className="btn btn-danger" onClick={handleLogOutClick}>
                   Logout
                 </button>
               </>

@@ -6,10 +6,13 @@ import Game from './components/Game/Game';
 import Navbar from './components/Navbar/NavBar';
 import History from './components/GameHistoryTable/GameHistoryTable';
 import Registration from "./components/Registration/Registration";
+import GameHistoryTableMoves from "./components/GameHistoryTableMoves/GameHistoryTableMoves";
+
+
 
 
 const App: React.FC = () => {
- 
+  
  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState<string | undefined>(undefined); 
@@ -40,6 +43,7 @@ const App: React.FC = () => {
           <Route path="/history" element={<History/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
+          <Route path="/historyTableMoves" element={<GameHistoryTableMoves />} />
         </Routes>
     </Router>
       </div>

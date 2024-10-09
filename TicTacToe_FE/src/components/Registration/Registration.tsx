@@ -8,7 +8,7 @@ import './Registration.css';
 
 
 const REGISTRATION_MUTATION = gql`
-    mutation register($username: String!, $email: String!, $password: String!){
+    mutation RegisterUser($username: String!, $email: String!, $password: String!){
         registerUser(username: $username, email: $email, password: $password){
             token
         }
@@ -21,7 +21,7 @@ const Registration: React.FC = () => {
     password: "",
     email: "",
   });
-  const [register, { data, error, loading }] = useMutation(REGISTRATION_MUTATION, { client });
+  const [RegisterUser, { data, error, loading }] = useMutation(REGISTRATION_MUTATION, { client });
   const [validateError, setvalidateError] = useState<{
     username: string | null;
     password: string | null;
@@ -80,7 +80,7 @@ const Registration: React.FC = () => {
     if (!validationErrors.username && !validationErrors.password && !validationErrors.email) {
       
         try {
-            const response = await register({
+            const response = await RegisterUser({
                 variables: {
                     username: formData.username,
                     password: formData.password,
@@ -91,6 +91,7 @@ const Registration: React.FC = () => {
             if(token){
                 localStorage.setItem('JWT', token);
                 console.log('Register successful, JWT:', token);
+                window.location.href = "/";
             }
         } catch (err) {
             console.error('Error during registration:', err);

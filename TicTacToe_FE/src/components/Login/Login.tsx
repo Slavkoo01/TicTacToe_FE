@@ -19,7 +19,7 @@ const Login: React.FC = () => {
     username: "",
     password: "",
   });
-  const [login, { data, error, loading }] = useMutation(LOGIN_MUTATION, {
+  const [login, { error, loading }] = useMutation(LOGIN_MUTATION, {
     client,
   });
 
@@ -136,7 +136,6 @@ const Login: React.FC = () => {
             {mapErrorMessage(error.message)}
           </div>
         )}
-        {data && navigate("/dashboard", { replace: true })}
       </div>
     </div>
   );

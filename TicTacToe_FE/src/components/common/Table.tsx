@@ -1,17 +1,16 @@
 import React from 'react';
-
-// Define types for the props
+import './Style/Table.css';
 interface TableProps<T> {
-  headers: string[];         // Array of column headers
-  data: T[];                 // Array of data items
-  renderRow: (item: T) => React.ReactNode; // A function to map data to table rows
+  headers: string[];         
+  data: T[];                 
+  renderRow: (item: T) => React.ReactNode; 
 }
 
 const Table = <T,>({ headers, data, renderRow }: TableProps<T>) => {
   return (
     <div className="game_history-table">
       <h2>Game History</h2>
-      <table className="table">
+      <table className="table1">
         <thead>
           <tr>
             {headers.map((header, index) => (

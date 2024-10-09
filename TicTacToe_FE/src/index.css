@@ -16,3 +16,33 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.Toastify__Toast {
+  background: rgba(34, 34, 34, 0.9); /* Dark background */
+  color: #ffffff; /* White text */
+  border-radius: 5px; /* Optional: Add border radius */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Add a shadow */
+}
+
+.Toastify__Toast--success {
+  background: rgba(76, 175, 80, 0.9); /* Green for success */
+}
+
+.Toastify__Toast--error {
+  background: rgba(244, 67, 54, 0.9); /* Red for error */
+}
+
+.Toastify__Toast--info {
+  background: rgba(33, 150, 243, 0.9); /* Blue for info */
+}
+
+.Toastify__Toast--warning {
+  background: rgba(255, 152, 0, 0.9); /* Orange for warning */
+}
+
+/* Positioning */
+.Toastify__Container {
+  bottom: 20px; /* Distance from bottom */
+  right: 20px; /* Distance from right */
+  z-index: 9999; /* Ensure it's on top */
+}
