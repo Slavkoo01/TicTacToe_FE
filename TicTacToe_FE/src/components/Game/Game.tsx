@@ -68,20 +68,29 @@ const Game: React.FC = () => {
         setSquares([...squares]);
         setXIsNext(xIsNext);
         setPlayerSign(sign);
+
       });
 
       socket.on("gameRestored", ({ squares, xIsNext, sign }) => {
         setSquares([...squares]);
         setXIsNext(xIsNext);
         setPlayerSign(sign);
+
       });
 
       socket.on('notification', ({ message }) => {
-        toast(message);
+        //toast(message);
       });
     };
 
     setupSocketListeners();
+    const handleBeforeUnload = () => {
+      if (state?.gameId) {
+        socket.emit("leaveRoom", { gameId: state.gameId });
+      }
+    };
+  
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       socket.emit("leaveRoom", { gameId: state.gameId });
@@ -92,30 +101,17 @@ const Game: React.FC = () => {
       socket.off("startGame");
       socket.off("gameRestored");
       socket.off("notification");
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [state, navigate]);
 
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (state?.gameId) {
-        socket.emit("leaveRoom", { gameId: state.gameId });
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [state]);
-
+  //mechanics
   const handleSquareClick = useCallback((i: number) => {
 
     if (state?.mode === "multiplayer") {
       if (gameStatus === activeGameStatus && !squares[i] && !winner && playerSign === (xIsNext ? "X" : "O")) {
-      
+
         socket.emit("makeMove", { roomId: state.gameId, squareIndex: i });
-        
       }
     } else if (state?.mode === "singleplayer") {
       if (!squares[i] && !winner) {
@@ -136,8 +132,7 @@ const Game: React.FC = () => {
       {state?.mode !== "singleplayer" && <label className="label">Lobby: {state?.gameId}<br/>{playerSign && `Your sign: ${playerSign}`}</label>}
       {gameStatus === pendingGameStatus && <p className="game-status">Waiting for opponent...</p>}
       <Board squares={squares} onSquareClick={handleSquareClick} xIsNext={xIsNext} winner={winner} />
-      <button className="btn btn-danger btn-lg" onClick={handleLeave}>Leave</button>
-      <p>Status: {gameStatus} GameId: {state?.gameId}</p>
+      <button className="btn btn-danger btn-lg leave" onClick={handleLeave}>Leave</button>
       <ToastContainer className={'Toastify__Container'}/>
     </div>
   );

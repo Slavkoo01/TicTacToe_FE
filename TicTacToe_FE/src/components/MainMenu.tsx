@@ -93,7 +93,6 @@ const MainMenu: React.FC = () => {
           </>
         )}
 
-        {!hasToken && <p className="info">Login for multiplayer!</p>}
       </div>
     </div>
   );

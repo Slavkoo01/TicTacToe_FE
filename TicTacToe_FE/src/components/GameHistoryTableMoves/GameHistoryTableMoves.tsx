@@ -1,72 +1,127 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { useQuery, gql } from '@apollo/client';
-import './GameHistoryTableMoves.css'; // Optional: CSS for styling
-import client from "../../utils/apolloClient"; // Ensure this is your Apollo client instance
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery, gql } from "@apollo/client";
+import Board from '../Game/Board'; 
+import "./GameHistoryTableMoves.css"; 
+import client from "../../utils/apolloClient"; 
 
-// GraphQL query to fetch moves based on game ID
 const GET_MOVES_BY_GAME_ID = gql`
   query getMovesByGameId($gameId: ID!) {
     getMovesByGameId(gameId: $gameId) {
       id
-      move_position  # Ensure this matches your GraphQL schema
-      player_id      # Ensure this matches your GraphQL schema
+      move_position
+      player_id
     }
   }
 `;
 
-// Define the Move interface
 interface Move {
-  id: string;           // or number, depending on your schema
+  id: string;
   move_position: number;
-  player_id: string;    // or number, depending on your schema
+  player_id: string;
 }
-
 const GameHistoryTableMoves: React.FC = () => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const { gameId, player1, player2 } = location.state || {};
+  const { gameId, player1Id, player1, player2Id, player2, player1_sign } =
+    location.state || {};
 
   const { loading, error, data } = useQuery(GET_MOVES_BY_GAME_ID, {
     variables: { gameId },
-    client, // Ensure you are using the correct Apollo Client
-    skip: !gameId, // Skip the query if gameId is not available
+    client,
+    skip: !gameId,
   });
+
+  const [currentMove, setCurrentMove] = useState(0); 
+  const [squares, setSquares] = useState<(string | null)[]>(Array(9).fill(null)); 
+
+  const player2_sign = player1_sign === "X" ? "O" : "X"; 
+
+  
+  const moves: Move[] = data?.getMovesByGameId || [];
+
+  useEffect(() => {
+    if(!gameId){
+      navigate('/', { replace: true});
+    }
+    if (moves.length > 0) {
+      updateSquares(currentMove);
+    }
+  }, [moves, currentMove]);
 
   if (loading) return <p>Loading moves...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const moves: Move[] = data?.getMovesByGameId || []; // Safely access moves and ensure it's typed
+  const updateSquares = (moveIndex: number) => {
+    const newSquares = Array(9).fill(null); 
+    for (let i = 0; i <= moveIndex; i++) {
+      const { player_id, move_position } = moves[i];
+      newSquares[move_position] = player_id === player1Id ? player1_sign : player2_sign;
+    }
+    setSquares(newSquares);
+  };
+
+
+  const goToNextMove = () => {
+    if (currentMove < moves.length - 1) {
+      setCurrentMove(currentMove + 1);
+    }
+  };
+
+
+  const goToPreviousMove = () => {
+    if (currentMove > 0) {
+      setCurrentMove(currentMove - 1);
+    }
+  };
 
   return (
-    <div className="app">
-      <h2>Game Moves History</h2>
-      <p>Game ID: {gameId}</p>
-      <p>Player 1: {player1}</p>
-      <p>Player 2: {player2}</p>
+    <div className="game-history-container">
+      <div className="game-info">
+        <h2>Game Moves History</h2>
+        <p><strong>Game ID:</strong> {gameId}</p>
+        <p><strong>Player 1:</strong> {player1} (Sign: {player1_sign})</p>
+        <p><strong>Player 2:</strong> {player2} (Sign: {player2_sign})</p>
+      </div>
 
-      <h3>Moves</h3>
-      {moves.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Move ID</th>
-              <th>Player ID</th>
-              <th>Move Position</th>
-            </tr>
-          </thead>
-          <tbody>
-            {moves.map((move: Move) => (  // Specify the type for move
-              <tr key={move.id}>
-                <td>{move.id}</td>
-                <td>{move.player_id}</td>
-                <td>{move.move_position}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>No moves found for this game.</p>
-      )}
+
+      <div className="board-container">
+        <Board
+          squares={squares}
+          onSquareClick={() => {}}
+          xIsNext={currentMove % 2 === 0}
+          winner={null} 
+        />
+      </div>
+
+      {/*NavButtons*/}
+      <div className="move-navigation">
+        <button onClick={goToPreviousMove} disabled={currentMove === 0} className="nav-button">
+          Previous Move
+        </button>
+        <button onClick={goToNextMove} disabled={currentMove >= moves.length - 1} className="nav-button">
+          Next Move
+        </button>
+      </div>
+
+      {/*List */}
+      <div className="moves-list">
+        <h3>Moves</h3>
+        <ul>
+          {moves.map((move, index) => {
+            const isPlayer1 = move.player_id === player1Id;
+            return (
+              <li key={move.id}>
+                <button 
+                  onClick={() => setCurrentMove(index)}
+                  className={`move-button ${currentMove === index ? 'active' : ''}`}>
+                  {index + 1}. {isPlayer1 ? player1 : player2} ({isPlayer1 ? player1_sign : player2_sign}) moved to position {move.move_position}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 };

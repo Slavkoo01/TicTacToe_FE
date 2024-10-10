@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-import './GameHistoryTable.css';
 import Table from '../common/Table';
 
 const GET_GAME_HISTORY = gql`
@@ -26,10 +25,18 @@ const GET_GAME_HISTORY = gql`
         created_at
       }
       gameDate
+      player1_sign
     }
   }
 `;
-
+interface GameHistoryTableMoves {
+  gameId: number;
+  player1Id: number;
+  player1: string;
+  player2Id: number;
+  player2: string;
+  player1_sign: string;
+}
 const ResultEnum: { [key: number]: string } = {
   0: 'Draw',
   1: 'Player 1 Wins',
@@ -39,7 +46,6 @@ const ResultEnum: { [key: number]: string } = {
 const GameHistoryTable: React.FC = () => {
   const navigate = useNavigate();
   const { loading, error, data, refetch } = useQuery(GET_GAME_HISTORY);
-
   useEffect(() => {
     const token = localStorage.getItem('JWT');
     
@@ -61,18 +67,19 @@ const GameHistoryTable: React.FC = () => {
     date: new Date(Number(game.gameDate)).toLocaleDateString(),
   }));
   const gameHistoryTableMoves = data.getGamesByUsername.map((game: any) => ({
-    id: game.game.id,
+    gameId: game.game.id,
     player1Id: game.player1.id,       
     player1: game.player1.username,
     player2Id: game.player2.id,        
     player2: game.player2.username,
+    player1_sign: game.player1_sign,
   }));
   const headers = ['ID', 'Player 1', 'Player 2', 'Result', 'Date'];
 
   // Handle row click
   const onTrClick = (gameId: number) => {
-    
-    //navigate('/historyTableMoves', { state: { gameId, player1, player2 } });
+    const selectedGame = gameHistoryTableMoves.find((game: GameHistoryTableMoves) => game.gameId === gameId);
+    navigate('/historyTableMoves', { state: selectedGame });
   };
 
   const renderRow = (game: any) => (

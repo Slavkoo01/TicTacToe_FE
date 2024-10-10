@@ -1,0 +1,72 @@
+.game-history-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+  background-color: #272f30;
+}
+
+.game-info {
+  margin-bottom: 20px;
+  color: #f0f0f0;
+}
+
+.board-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.move-navigation {
+  margin-bottom: 20px;
+}
+
+.nav-button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  background-color: #0275d8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.nav-button:disabled {
+  background-color: #cccccc;
+}
+
+.nav-button:hover:not(:disabled) {
+  background-color: #0080f0;
+}
+
+.moves-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.moves-list li {
+  margin: 10px 0;
+}
+.moves-list h3 {
+  color: #f0f0f0;
+}
+
+.move-button {
+  padding: 10px;
+  width: 100%;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.move-button.active {
+  background-color: #0275d8;
+  color: white;
+  font-weight: bold;
+}
+
+.move-button:hover {
+  background-color: #0088ff;
+}
