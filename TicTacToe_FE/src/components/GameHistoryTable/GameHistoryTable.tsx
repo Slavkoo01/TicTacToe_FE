@@ -80,6 +80,7 @@ const GameHistoryTable: React.FC = () => {
   const onTrClick = (gameId: number) => {
     const selectedGame = gameHistoryTableMoves.find((game: GameHistoryTableMoves) => game.gameId === gameId);
     navigate('/historyTableMoves', { state: selectedGame });
+    console.log(selectedGame);
   };
 
   const renderRow = (game: any) => (

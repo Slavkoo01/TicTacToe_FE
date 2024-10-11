@@ -23,7 +23,9 @@ const MainMenu: React.FC = () => {
     const jwt = localStorage.getItem("JWT");
     if (jwt) {
       socket.emit("createGame", { token: jwt, gameType: "MULTIPLAYER" });
-      socket.on("gameCreated", ({ ReturnedGameId }) => {
+      
+
+      socket.once("gameCreated", ({ ReturnedGameId }) => {
         setGameId(ReturnedGameId);
         navigate("/game", {
           state: { mode: "multiplayer", gameId: ReturnedGameId },
@@ -37,11 +39,10 @@ const MainMenu: React.FC = () => {
   const handleJoinGame = useCallback(() => {
     const jwt = localStorage.getItem("JWT");
     if (jwt) {
-      socket.emit("joinRoom", { token: jwt, gameId });
-      socket.on("joinedRoom", () => {
+      
         navigate("/game", {
           state: { mode: "multiplayer", gameId },
-        });
+        
       });
     } else {
       console.error("No JWT token found");
@@ -92,7 +93,6 @@ const MainMenu: React.FC = () => {
             </button>
           </>
         )}
-
       </div>
     </div>
   );

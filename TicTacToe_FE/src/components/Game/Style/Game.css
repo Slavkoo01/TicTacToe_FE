@@ -38,7 +38,14 @@
   color: white;
   user-select: none;
 }
+.cell.disabled {
+  pointer-events: none;
+  background-color: var(--BgColor);
+}
 
+.cell.disabled:hover {
+  background-color: var(--BgColor);
+}
 button:hover {
   background-color: var(--BgColor);
 }
@@ -54,6 +61,8 @@ button:hover {
   color: brown;
 }
 .game-status {
+  font-size: 20px;
+  font-weight: medium;
   color: aliceblue;
 }
 .leave {

@@ -23,7 +23,7 @@ interface Move {
 const GameHistoryTableMoves: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { gameId, player1Id, player1, player2Id, player2, player1_sign } =
+  const { gameId, player1Id, player1, player2, player1_sign } =
     location.state || {};
 
   const { loading, error, data } = useQuery(GET_MOVES_BY_GAME_ID, {
@@ -36,7 +36,7 @@ const GameHistoryTableMoves: React.FC = () => {
   const [squares, setSquares] = useState<(string | null)[]>(Array(9).fill(null)); 
 
   const player2_sign = player1_sign === "X" ? "O" : "X"; 
-
+  //alert(player2_sign);
   
   const moves: Move[] = data?.getMovesByGameId || [];
 
@@ -91,6 +91,7 @@ const GameHistoryTableMoves: React.FC = () => {
           onSquareClick={() => {}}
           xIsNext={currentMove % 2 === 0}
           winner={null} 
+          isGameHistoryMoves={true}
         />
       </div>
 
