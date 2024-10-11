@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./MainMenu.css";
 import Input from "./common/Input";
 import socket from "../utils/socket";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const MainMenu: React.FC = () => {
   const navigate = useNavigate();
   const [gameId, setGameId] = useState<string>("");
@@ -28,7 +29,7 @@ const MainMenu: React.FC = () => {
       socket.once("gameCreated", ({ ReturnedGameId }) => {
         setGameId(ReturnedGameId);
         navigate("/game", {
-          state: { mode: "multiplayer", gameId: ReturnedGameId },
+          state: { mode: "multiplayer", gameId: ReturnedGameId},
         });
       });
     } else {
@@ -39,11 +40,18 @@ const MainMenu: React.FC = () => {
   const handleJoinGame = useCallback(() => {
     const jwt = localStorage.getItem("JWT");
     if (jwt) {
-      
-        navigate("/game", {
-          state: { mode: "multiplayer", gameId },
+        socket.emit('checkInLobby', { gameId:gameId, token:jwt })
+        socket.once('notInLobby', () => {
+          socket.emit('bussyLobby', { gameId, token:jwt });
+          socket.once('notBussy',() => {
+            navigate("/game", {
+              state: { mode: "multiplayer", gameId },
+            });
+
+          });
         
       });
+      toast('cannot join lobby');
     } else {
       console.error("No JWT token found");
     }
@@ -93,6 +101,7 @@ const MainMenu: React.FC = () => {
             </button>
           </>
         )}
+        <ToastContainer className={"Toastify__Container"} />
       </div>
     </div>
   );

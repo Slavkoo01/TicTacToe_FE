@@ -6,7 +6,7 @@ import socket from "../../utils/socket";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Confetti from "react-confetti";
-import { parseCommandLine } from "typescript";
+
 
 const Game: React.FC = () => {
   console.log('b');
@@ -68,6 +68,9 @@ const Game: React.FC = () => {
       socket.on("notification", ({ message }) => {
         toast(message);
       });
+      
+
+
     };
     
     setupSocketListeners();
@@ -78,9 +81,10 @@ const Game: React.FC = () => {
     };
     
     window.addEventListener("beforeunload", handleBeforeUnload);
-    
-    socket.emit("checkStatus", { token: jwt, gameId: state.gameId });
-    socket.emit("joinRoom", { token: jwt, gameId: state.gameId });
+    if (state.mode !== "singleplayer") {
+      socket.emit("checkStatus", { token: jwt, gameId: state.gameId });
+      socket.emit("joinRoom", { token: jwt, gameId: state.gameId });
+    }
     return () => {
       socket.emit("leaveRoom", { gameId: state.gameId });
       socket.off("changeStatus");
@@ -88,6 +92,7 @@ const Game: React.FC = () => {
       socket.off("gameOver");
       socket.off("startGame");
       socket.off("notification");
+   
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [state, navigate]);
