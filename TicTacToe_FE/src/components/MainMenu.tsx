@@ -20,38 +20,42 @@ const MainMenu: React.FC = () => {
     };
   }, []);
 
-  const handleCreateGame = useCallback(() => {
+  const handleCreateGame = () => {
     const jwt = localStorage.getItem("JWT");
+  
     if (jwt) {
-      socket.emit("createGame", { token: jwt, gameType: "MULTIPLAYER" });
-      
-
-      socket.once("gameCreated", ({ ReturnedGameId }) => {
-        setGameId(ReturnedGameId);
-        navigate("/game", {
-          state: { mode: "multiplayer", gameId: ReturnedGameId},
+        socket.emit("createGame", { token: jwt, gameType: "MULTIPLAYER" });
+  
+        socket.once("gameCreated", ({ ReturnedGameId }) => {
+          setGameId(ReturnedGameId);
+          localStorage.setItem("currentGameId", ReturnedGameId); // Store game ID locally
+          navigate("/game", {
+            state: { mode: "multiplayer", gameId: ReturnedGameId },
+          });
         });
+   
+      socket.once('alreadyInLobby', () => {
+        toast('You are already in a game lobby!');
       });
+  
     } else {
       console.error("No JWT token found");
     }
-  }, [navigate]);
+  }
+  
+  
 
   const handleJoinGame = useCallback(() => {
     const jwt = localStorage.getItem("JWT");
     if (jwt) {
-        socket.emit('checkInLobby', { gameId:gameId, token:jwt })
-        socket.once('notInLobby', () => {
+
           socket.emit('bussyLobby', { gameId, token:jwt });
           socket.once('notBussy',() => {
             navigate("/game", {
               state: { mode: "multiplayer", gameId },
             });
-
           });
-        
-      });
-      toast('cannot join lobby');
+      toast('You cannot join this game!');
     } else {
       console.error("No JWT token found");
     }
